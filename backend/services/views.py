@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from rest_framework import viewsets, permissions
+from .models import Service
+from .serializers import ServiceSerializer
 
-# Create your views here.
+class ServiceViewSet(viewsets.ModelViewSet):
+    queryset = Service.objects.filter(is_available=True)
+    serializer_class = ServiceSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAdminUser()]
